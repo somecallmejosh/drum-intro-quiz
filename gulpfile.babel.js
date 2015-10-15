@@ -25,11 +25,7 @@ gulp.task('styles', () => {
 });
 
 
-gulp.task('deploy', ['build'], () => {
-  return gulp.src('dist')
-    .pipe($.subtree())
-    .pipe($.clean());
-});
+
 
 gulp.task('html', ['styles'], () => {
   const assets = $.useref.assets({searchPath: ['.tmp', 'app', '.']});
@@ -78,6 +74,12 @@ gulp.task('extras', () => {
 });
 
 gulp.task('clean', del.bind(null, ['.tmp', 'dist']));
+
+gulp.task('deploy', ['build'], () => {
+  return gulp.src('dist')
+    .pipe($.subtree())
+    .pipe($.clean());
+});
 
 gulp.task('serve', ['styles', 'fonts'], () => {
   browserSync({
