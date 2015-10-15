@@ -1,5 +1,6 @@
 node_modules
-dist
+mocks/
+mocks
 .tmp
 .sass-cache
 bower_components
