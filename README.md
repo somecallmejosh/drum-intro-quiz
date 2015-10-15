@@ -2,9 +2,14 @@ Famous Drum Fill Quiz
 =====================
 
 ##Wires
-[Landing](https://dl.dropboxusercontent.com/u/39806773/ThinkfulProjects/QuizAppWires/landing.png)
-[Questions](https://dl.dropboxusercontent.com/u/39806773/ThinkfulProjects/QuizAppWires/question.png)
-[Results](https://dl.dropboxusercontent.com/u/39806773/ThinkfulProjects/QuizAppWires/results.png)
+![Landing]
+(https://dl.dropboxusercontent.com/u/39806773/ThinkfulProjects/QuizAppWires/landing.png)
+
+![Questions]
+(https://dl.dropboxusercontent.com/u/39806773/ThinkfulProjects/QuizAppWires/question.png)
+
+![Results]
+(https://dl.dropboxusercontent.com/u/39806773/ThinkfulProjects/QuizAppWires/results.png)
 
 ##Required Features
 - [ ] The app must lead the user through a set of questions. The user should only see one question at a time, with new answers presented only after they have answered the current one.
