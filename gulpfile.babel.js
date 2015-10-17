@@ -24,20 +24,6 @@ gulp.task('styles', () => {
     .pipe(reload({stream: true}));
 });
 
-// function lint(files, options) {
-//   return () => {
-//     return gulp.src(files)
-//       .pipe(reload({stream: true, once: true}))
-//       .pipe($.eslint(options))
-//       .pipe($.eslint.format())
-//       .pipe($.if(!browserSync.active, $.eslint.failAfterError()));
-//   };
-// }
-// const testLintOptions = {
-//   env: {
-//     mocha: true
-//   }
-// };
 
 gulp.task('deploy', ['build'], () => {
   return gulp.src('dist')
@@ -85,6 +71,11 @@ gulp.task('fonts', () => {
     .pipe(gulp.dest('dist/fonts'));
 });
 
+gulp.task('audio', () => {
+  return gulp.src('app/audio/**/*.mp3')
+  .pipe(gulp.dest('dist/audio'));
+});
+
 gulp.task('extras', () => {
   return gulp.src([
     'app/*.*',
@@ -96,7 +87,7 @@ gulp.task('extras', () => {
 
 gulp.task('clean', del.bind(null, ['.tmp', 'dist']));
 
-gulp.task('serve', ['styles', 'fonts'], () => {
+gulp.task('serve', ['styles', 'fonts', 'audio'], () => {
   browserSync({
     notify: false,
     port: 9000,
@@ -112,11 +103,13 @@ gulp.task('serve', ['styles', 'fonts'], () => {
     'app/*.html',
     'app/scripts/**/*.js',
     'app/images/**/*',
+    'app/audio/**/*',
     '.tmp/fonts/**/*'
   ]).on('change', reload);
 
   gulp.watch('app/styles/**/*.scss', ['styles']);
   gulp.watch('app/fonts/**/*', ['fonts']);
+  gulp.watch('app/audio/**/*', ['audio']);
   gulp.watch('bower.json', ['wiredep', 'fonts']);
 });
 
@@ -163,7 +156,7 @@ gulp.task('wiredep', () => {
     .pipe(gulp.dest('app'));
 });
 
-gulp.task('build', ['html', 'images', 'fonts', 'extras'], () => {
+gulp.task('build', ['html', 'images', 'fonts', 'audio', 'extras'], () => {
   return gulp.src('dist/**/*').pipe($.size({title: 'build', gzip: true}));
 });
 
