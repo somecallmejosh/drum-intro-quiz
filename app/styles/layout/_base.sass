@@ -1,19 +1,16 @@
-+container
-
 *, *::before, *::after
   box-sizing: border-box
 html, body
   padding: 0
   margin: 0
-  background-color: #f2f2f2
+  background-color: $offwhite
   font-family: 'Roboto', sans-serif
-  font-size: 16px
+  font-size: $base-font-size
+  color: $text-color
 
 .wrapper--content
-  @include container(700px)
-  overflow: visible
-  background-color: white
-  margin-bottom: 2rem
+  width: $app-width
+  margin: 0 auto
 h1, h2, h3, h4, h5, h6
   padding: 0
   margin: 1rem 0
