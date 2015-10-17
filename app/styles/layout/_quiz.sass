@@ -1,19 +1,39 @@
-.quiz-intro, .quiz-results
+.quiz-intro
+  background-color: $white
+  overflow: auto
+  margin-bottom: 2rem
+  box-shadow: 0 0 10px $gray
+  position: fixed
+  top: 0
+  left: 0
+  width: 100%
+  z-index: 100
+  svg 
+    height: 3.125rem
+    width: 3.125rem
+.quiz-results
   padding: 2rem
+  text-align: center
+  .result
+    display: inline-block
+    background-color: $white
+    padding: 1rem
+  strong
+    display: block
+    font-size: 2rem
 .quiz-content
   position: relative
   min-height: 12.5rem
   z-index: 10
 .quiz-question
   background-color: $white
-  margin-bottom: 2rem
 .quiz-details
-  display: flex
-  padding: 3rem
+  padding: 2rem 3rem 3rem
   .quiz-number
-    font-size: 2.5rem
-    margin: -.75rem .5rem 0 0
+    text-align: center
+    font-size: 1rem
     font-weight: bold
+    padding: 0 0 1rem
   audio
     width: 100%
 .quiz-options
@@ -27,18 +47,22 @@
     transition: all .2s ease-in-out
     padding: 0 0 0 .5rem
     text-align: center
-    &:nth-child(1), &:nth-child(2)
-      border-bottom: $white 1px solid
+    border-bottom: $white 1px solid
     &:nth-child(odd)
       border-right: $white 1px solid
     &:hover 
-      background-color: darken($lightgray, 5%)
+      background-color: $link-color
+      color: $white
       cursor: pointer
     &.selected
       background-color: darken($lightgray, 20%)
       color: $white
       &:hover 
         cursor: default
+.quiz-action
+  text-align: center
+  background-color: darken($offwhite, 5%)
+  padding: 1rem 0
 .quiz-result
   height: 3rem
   width: 3rem
