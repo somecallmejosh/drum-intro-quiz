@@ -38,8 +38,5 @@
         "single"
       ]
     }
-  },
-  "dependencies": {
-    "susy": "^2.2.6"
   }
 }
