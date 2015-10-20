@@ -59,7 +59,7 @@
         </div>
       </div>
     </div>
-    <div class="wrapper--content">
+    <div class="wrapper--content quiz-instructions">
       <p>How well do you know these famous songs that begin with a drum groove fill. Test your knowledge by listening to each audio sample, and then selecting the appropriate song.</p>
     </div>
     <div class="wrapper--content quiz-content">
@@ -77,10 +77,10 @@
         </div>
         <div class="quiz-options">
           <!-- class="selected" for selected item -->
-          <div id="one">Supersition</div>
-          <div id="two">Brick House</div>
-          <div id="three">Play That Funky Music White Boy</div>
-          <div id="four">Fire</div>
+          <div>Placeholder</div>
+          <div>Placeholder</div>
+          <div>Placeholder</div>
+          <div>Placeholder</div>
         </div>
         <div class="quiz-action">
           <button class="disabled">Next Question</button>
@@ -98,8 +98,8 @@
 
     <div class="wrapper--content quiz-complete hidden">
       <h1>Thanks for playing</h1>
-      <p>You guessed x out of y correct. Nice Job.</p>
-      <button class="play-again">Try For a Better Score?</button>
+      <p>You guessed <strong class="correct-total">5</strong> out of <strong class="question-total">10</strong> correct. That's <strong class="percent-correct">90%</strong><sup>%</sup> correct. Nice Job.</p>
+      <button class="play-again">Play Again?</button>
     </div>
 
     <footer class="wrapper--content">
@@ -123,6 +123,7 @@
     <!-- endbuild -->
     
     <!-- build:js scripts/main.js -->
+    <script src="scripts/questions.js"></script>
     <script src="scripts/main.js"></script>
     <!-- endbuild -->
   </body>
