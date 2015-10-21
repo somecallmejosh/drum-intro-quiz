@@ -1,19 +1,23 @@
-// Create the game variables
-  // quizItemCount
-  // correctAnswerCount
-  // currentQuesion
-  // showPercentCorrect = isCorrectAnswer / quizItemCount
+// Create the global game variables
   var quizItemCount = quizItems.length,
-      correctAnswerCount = 0,
       currentQuestion = 1,
       currentIndex = currentQuestion - 1,
+      correctAnswerCount = 0,
       showPercentCorrect = Math.round((correctAnswerCount / quizItemCount) * 100);
 
-// Create new quiz items based on quiz object
-  // Get count of all new quiz items, and keep track of that in quizItemCount variable
-  // Create/Clone quiz items into markup
-    // Keep track of quiz index
+  // Utility classes
+    function clearQuestions(){
+      $('.quiz-options label, .quiz-options input').remove();
+    }
 
+    function addselectedClass(){
+      var $this = $(this);
+      $this.closest(".quiz-options").find('label').removeClass("selected");
+      $this.addClass("selected");
+      $('.quiz-action .submit').removeClass("disabled");
+    }
+
+  
   function updateAudio(sourceUrl){
     // http://stackoverflow.com/questions/9421505/switch-audio-source-with-jquery-and-html5-audio-tag#answer-9512994
     var audio = $('.audio-player');
@@ -22,39 +26,51 @@
     audio[0].load();
   }
 
-  function updateQuestion(questionOptions){
-    $('.quiz-options div').remove();
-    $.each(quizItems[questionOptions].answerOptions, function(key, value){
-      $('<div id=' + (key + 1) + '>' + value + '<div>').appendTo('.quiz-options');
+  function displayQuestion(){
+    clearQuestions();
+    updateAudio(quizItems[currentIndex].mp3Name);
+    $.each(quizItems[currentIndex].answerOptions, function(key, value){
+      $('<label for=' + (key + 1) + '>' + value + '</label><input type="radio" name="quiz-item" id="' + (key+1) + ' /">').appendTo('.quiz-options');
     });
   }
 
-
-  function compareAnswer(comparison){
-    // compare user selected answer to correct answer
-    // Get user selection
-      // Compare user selection to correct answer
-        // if answer is correct && quizIndex <= quizItemCount, 
-          // Add +1 to a variable called correctAnswerCount
-          // Move user to next question of quiz (increment currentQuestion)
-          // Add "is-correct" class to question
-        // else if answer !correct
-          // do some stuff
-          // Move user to next question of quiz (increment currentQuestion)
+  function submitResponse(){
+    var correct = quizItems[currentIndex].correctAnswer,
+        selected = returnUserSelection();
+    console.log(correct);
+    console.log(selected);
+    if( correct === selected){
+      console.log("I can't fucking believe it.")
+    } else {
+      console.log("Oh fucking well. Keep working.")
+    }
+  }
+  
+  function returnUserSelection(){
+    var selectionID = parseInt($(this).attr("for")) -1;
+    console.log(selectionID);
+    return selectionID;
   }
 
-  if(currentQuestion <= quizItemCount) {
-    updateAudio(quizItems[currentIndex].mp3Name);
-    updateQuestion(currentIndex);
-  } else if (currentQuestion > quizItemCount){
-    $('.quiz-content, .quiz-instructions').hide();
-    $('.quiz-complete').removeClass("hidden");
+  function compareAnswer(quizIndex){
+    // extract out the click event
+    // Needs work
+    var correctAnswer = parseInt(quizItems[quizIndex].correctAnswer);
+    var userAnswer = parseInt(returnUserSelection());
+    if (correctAnswer == userAnswer) {
+      return true;
+      console.log("answer is correct");
+    } else {
+      return false;
+      console.log("answer is incorrect");
+    }
   }
 
-  $('.question-index').text(currentQuestion);
-  $('.correct-total').text(correctAnswerCount);
-  $('.question-total').text(quizItemCount);
-  $('.percent-correct').text(showPercentCorrect);
+  displayQuestion();
+  $('.quiz-options label').on("click", returnUserSelection);
+  $('.quiz-options label').on("click", addselectedClass);
+  $('.submit').on("click", submitResponse)
 
- 
+
+
 
