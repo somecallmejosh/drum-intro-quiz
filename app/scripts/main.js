@@ -1,75 +1,107 @@
-// Create the global game variables
-  var quizItemCount = quizItems.length,
-      currentQuestion = 1,
-      currentIndex = currentQuestion - 1,
-      correctAnswerCount = 0,
-      showPercentCorrect = Math.round((correctAnswerCount / quizItemCount) * 100);
+!function(){
+  var questions = [
+    {
+      mp3Name: "audio/bh.mp3",
+      answerOptions: ["Brick House", "Give Up The Funk", "Pick Up The Pieces", "Funky Drummer"],
+      correctAnswer: 0
+    },
+    {
+      mp3Name: "audio/fw.mp3",
+      answerOptions: ["Slip Sliding Away", "What I Am", "Fifty Ways to Leave Your Lover", "Chuck E's In Love"],
+      correctAnswer: 2
+    },
+    {
+      mp3Name: "audio/hft.mp3",
+      answerOptions: ["Rock and Roll", "Hot For Teacher", "I Can't Drive 55", "You Might Think"],
+      correctAnswer: 1
+    },
+    {
+      mp3Name: "audio/r.mp3",
+      answerOptions: ["Layla", "In Your Eyes", "Roseanna", "Maybe I'm Amazed"],
+      correctAnswer: 2
+    },
+    {
+      mp3Name: "audio/rr.mp3",
+      answerOptions: ["Tom Sawyer", "Moby Dick", "The End", "Rock and Roll"],
+      correctAnswer: 3
+    },
+    {
+      mp3Name: "audio/rwy.mp3",
+      answerOptions: ["I Feel Good", "Rock With You", "Billie Jean", "Uptown Funk"],
+      correctAnswer: 1
+    },
+    {
+      mp3Name: "audio/s.mp3",
+      answerOptions: ["Superstision", "Get Down Tonight", "Disco Inferno", "Cissy Strut"],
+      correctAnswer: 0
+    },
+    {
+      mp3Name: "audio/sbs.mp3",
+      answerOptions: ["War", "Sunday Bloody Sunday", "Fortunate Son", "Rainy Day Woman #12 & 35"],
+      correctAnswer: 1
+    },
+    {
+      mp3Name: "audio/sss.mp3",
+      answerOptions: ["In The Mood", "Caravan", "Night in Tunisia", "Sing Sing Sing"],
+      correctAnswer: 3
+    },
+    {
+      mp3Name: "audio/tp.mp3",
+      answerOptions: ["Semi Charmed Life", "Right Here Right Now", "Two Princes", "Inside Out"],
+      correctAnswer: 2
+    },
+    {
+      mp3Name: "audio/wo.mp3",
+      answerOptions: ["I Want Candy", "Hand Jive", "Wipeout", "Let There Be Drums"],
+      correctAnswer: 2
+    }
+  ];
 
-  // Utility classes
-    function clearQuestions(){
-      $('.quiz-options label, .quiz-options input').remove();
+  // Question Object
+    function Question(model){
+      this.mp3Name = model.mp3Name;
+      this.answerOptions = model.answerOptions;
+      this.correctAnswer = model.correctAnswer;
     }
 
-    function addselectedClass(){
-      var $this = $(this);
-      $this.closest(".quiz-options").find('label').removeClass("selected");
-      $this.addClass("selected");
-      $('.quiz-action .submit').removeClass("disabled");
+    Question.prototype.checkAnswer = function(index){
+      return index === this.correctAnswer;
+    };
+
+    Question.prototype.forEachAnswer = function(callback, context){
+      this.answerOptions.forEach(callback, context);
+    };
+
+  // Quiz Object
+    function Quiz(data){
+      this.numberCorrect = 0;
+      this.counter = 0;
+      this.questions = [];
+
+      this.addQuestions(data);
     }
 
-  
-  function updateAudio(sourceUrl){
-    // http://stackoverflow.com/questions/9421505/switch-audio-source-with-jquery-and-html5-audio-tag#answer-9512994
-    var audio = $('.audio-player');
-    $('.audio-source').attr("src", sourceUrl);
-    audio[0].pause();
-    audio[0].load();
-  }
+    Quiz.prototype.addQuestions = function(data){
+      for (var i = 0; i < data.length; i++){
+        this.questions.push(new Question(data[i]));
+      }
+    };
 
-  function displayQuestion(){
-    clearQuestions();
-    updateAudio(quizItems[currentIndex].mp3Name);
-    $.each(quizItems[currentIndex].answerOptions, function(key, value){
-      $('<label for=' + (key + 1) + '>' + value + '</label><input type="radio" name="quiz-item" id="' + (key+1) + ' /">').appendTo('.quiz-options');
-    });
-  }
+    Quiz.prototype.advanceQuestion = function(lastAnswer) {
+      if (this.currentQuestion && this.currentQuestion.checkAnswer(lastAnswer)) {
+        this.numberCorrect++;
+      }
 
-  function submitResponse(){
-    var correct = quizItems[currentIndex].correctAnswer,
-        selected = returnUserSelection();
-    console.log(correct);
-    console.log(selected);
-    if( correct === selected){
-      console.log("I can't fucking believe it.")
-    } else {
-      console.log("Oh fucking well. Keep working.")
+      this.currentQuestion = this.questions[this.counter++];
+
+      return this.currentQuestion;
     }
-  }
-  
-  function returnUserSelection(){
-    var selectionID = parseInt($(this).attr("for")) -1;
-    console.log(selectionID);
-    return selectionID;
-  }
 
-  function compareAnswer(quizIndex){
-    // extract out the click event
-    // Needs work
-    var correctAnswer = parseInt(quizItems[quizIndex].correctAnswer);
-    var userAnswer = parseInt(returnUserSelection());
-    if (correctAnswer == userAnswer) {
-      return true;
-      console.log("answer is correct");
-    } else {
-      return false;
-      console.log("answer is incorrect");
-    }
-  }
+}();
 
-  displayQuestion();
-  $('.quiz-options label').on("click", returnUserSelection);
-  $('.quiz-options label').on("click", addselectedClass);
-  $('.submit').on("click", submitResponse)
+
+
+
 
 
 
