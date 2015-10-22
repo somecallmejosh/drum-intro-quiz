@@ -5,19 +5,23 @@
       correctAnswerCount = 0,
       showPercentCorrect = Math.round((correctAnswerCount / quizItemCount) * 100);
 
-  // Utility classes
-    function clearQuestions(){
-      $('.quiz-options label, .quiz-options input').remove();
-    }
-
-    function addselectedClass(){
-      var $this = $(this);
-      $this.closest(".quiz-options").find('label').removeClass("selected");
-      $this.addClass("selected");
-      $('.quiz-action .submit').removeClass("disabled");
-    }
-
+  $('.question-index').html(currentQuestion);
+  $('.percent-correct').html(showPercentCorrect);
+  $('.correct-total').html(correctAnswerCount);
+  $('.question-total').html(quizItemCount);
   
+  // Utility functions
+  function clearQuestions(){
+    $('.quiz-options label, .quiz-options input').remove();
+  }
+
+  function addselectedClass(){
+    var $this = $(this);
+    $this.closest(".quiz-options").find('label').removeClass("selected");
+    $this.addClass("selected");
+    $('.quiz-action .submit').removeClass("disabled");
+  }
+
   function updateAudio(sourceUrl){
     // http://stackoverflow.com/questions/9421505/switch-audio-source-with-jquery-and-html5-audio-tag#answer-9512994
     var audio = $('.audio-player');
@@ -27,50 +31,46 @@
   }
 
   function displayQuestion(){
-    clearQuestions();
-    updateAudio(quizItems[currentIndex].mp3Name);
-    $.each(quizItems[currentIndex].answerOptions, function(key, value){
-      $('<label for=' + (key + 1) + '>' + value + '</label><input type="radio" name="quiz-item" id="' + (key+1) + ' /">').appendTo('.quiz-options');
-    });
-  }
-
-  function submitResponse(){
-    var correct = quizItems[currentIndex].correctAnswer,
-        selected = returnUserSelection();
-    console.log(correct);
-    console.log(selected);
-    if( correct === selected){
-      console.log("I can't fucking believe it.")
+    if(currentQuestion <= quizItemCount){
+      clearQuestions();
+      updateAudio(quizItems[currentIndex].mp3Name);
+      $.each(quizItems[currentIndex].answerOptions, function(key, value){
+        $('<label for=' + (key + 1) + '>' + value + '</label><input type="radio" name="quiz-item" id="' + (key+1) + ' /">').appendTo('.quiz-options');
+      });
+      $('.quiz-options label').on("click", userSelection);
+      $('.quiz-options label').on("click", addselectedClass);
+      $('.submit').on("click", submitResponse);
     } else {
-      console.log("Oh fucking well. Keep working.")
+      $('.quiz-instructions, .quiz-content').hide();
+      $('.quiz-complete').removeClass("hidden");
     }
   }
-  
-  function returnUserSelection(){
-    var selectionID = parseInt($(this).attr("for")) -1;
-    console.log(selectionID);
+
+  function userSelection(){
+    selectionID = parseInt($(this).attr("for")-1);
     return selectionID;
   }
 
-  function compareAnswer(quizIndex){
-    // extract out the click event
-    // Needs work
-    var correctAnswer = parseInt(quizItems[quizIndex].correctAnswer);
-    var userAnswer = parseInt(returnUserSelection());
-    if (correctAnswer == userAnswer) {
-      return true;
-      console.log("answer is correct");
+  function submitResponse(){
+    var correctResult = quizItems[currentIndex].correctAnswer;
+    var userResponse = selectionID;
+    var $question = $('.quiz-question');
+    if (correctResult === userResponse){
+      $question.removeClass("answer-incorrect");
+      $question.addClass("answer-correct");
+
+      // needs to return Correct Answer Count
+      console.log("Correct Answer Count: " + correctAnswerCount);
     } else {
-      return false;
-      console.log("answer is incorrect");
+      $question.removeClass("answer-correct");
+      $question.addClass("answer-incorrect");
     }
   }
 
-  displayQuestion();
-  $('.quiz-options label').on("click", returnUserSelection);
-  $('.quiz-options label').on("click", addselectedClass);
-  $('.submit').on("click", submitResponse)
+  function resetGame(){
+    // reset all game variables
+  }
 
-
+displayQuestion();
 
 
