@@ -37,9 +37,15 @@
       $.each(quizItems[currentIndex].answerOptions, function(key, value){
         $('<label for=' + (key + 1) + '>' + value + '</label><input type="radio" name="quiz-item" id="' + (key+1) + ' /">').appendTo('.quiz-options');
       });
+      // A bunch of DOM Crud
       $('.quiz-options label').on("click", userSelection);
       $('.quiz-options label').on("click", addselectedClass);
       $('.submit').on("click", submitResponse);
+      $('.submit').on("click", function(){
+        $(this).addClass("disabled");
+        $('.quiz-options').addClass('option-selected');
+        $('.next-question').removeClass("disabled");
+      })
     } else {
       $('.quiz-instructions, .quiz-content').hide();
       $('.quiz-complete').removeClass("hidden");
@@ -58,7 +64,6 @@
     if (correctResult === userResponse){
       $question.removeClass("answer-incorrect");
       $question.addClass("answer-correct");
-
       // needs to return Correct Answer Count
       console.log("Correct Answer Count: " + correctAnswerCount);
     } else {
