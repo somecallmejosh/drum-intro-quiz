@@ -33,7 +33,7 @@
   
   function quizStart(){
     quizItemCount = quizItems.length;
-    currentQuestion = 10;
+    currentQuestion = 1;
     currentIndex = currentQuestion - 1;
     correctAnswerCount = 0;
     showPercentCorrect = Math.round((correctAnswerCount / quizItemCount) * 100);   
