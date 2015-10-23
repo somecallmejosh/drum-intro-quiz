@@ -27,21 +27,18 @@
     audio[0].pause();
     audio[0].load();
   }
-
-  $('.quiz-content').hide();
-  $('.quiz-start').on("click", quizStart);
   
   function quizStart(){
-    quizItemCount = quizItems.length;
+    // quizItemCount = quizItems.length;
     currentQuestion = 1;
     currentIndex = currentQuestion - 1;
     correctAnswerCount = 0;
-    showPercentCorrect = Math.round((correctAnswerCount / quizItemCount) * 100);   
+    // showPercentCorrect = Math.round((correctAnswerCount / quizItemCount) * 100);   
     showSingleQuestion();
     captureSelction();
     showStatus();
-    $('.quiz-content').fadeIn(1000);
-    $('.quiz-instructions').fadeOut(300);
+    $('.quiz-content').removeClass("hidden");
+    $('.quiz-instructions').addClass("hidden");
     $('.submit').on("click", submitResponse);
     $('.submit').on("click", function(){
       $(this).addClass("disabled");
@@ -50,15 +47,20 @@
     }); 
   }
 
-  $('.next-question').on("click", showNextQuestion);
-
   function showNextQuestion(){
-    resetQuestion();
-    currentIndex++;
-    currentQuestion++;
-    showSingleQuestion();
-    captureSelction();
-    showStatus();
+    var getCurrentQuestion = currentQuestion;
+    quizItemCount = quizItems.length;
+    if (getCurrentQuestion < quizItemCount) {
+      resetQuestion();
+      currentIndex++;
+      currentQuestion++;
+      showSingleQuestion();
+      captureSelction();
+      showStatus();
+    } else {
+      $('.quiz-content').addClass("hidden");
+      $('.quiz-complete').removeClass("hidden");
+    }
   }
 
   var showSingleQuestion = (function(){
@@ -91,14 +93,13 @@
     var $question = $('.quiz-question');
     if (correctResult === userResponse){
       $question.addClass("answer-correct");
+      return correctAnswerCount++;
     } else {
       $question.addClass("answer-incorrect");
     }
   }
 
-  function resetGame(){
-    window.location.reload(); 
-  }
+  
 
   function showStatus(){
     $('.question-index').html(currentQuestion);
@@ -106,4 +107,12 @@
     $('.correct-total').html(correctAnswerCount);
     $('.question-total').html(quizItemCount);
   }
+
+  function resetGame(){
+    window.location.reload(); 
+  }
+
+  $('.next-question').on("click", showNextQuestion);
+  $('.quiz-start').on("click", quizStart);
+  $('.play-again').on("click", resetGame);
   
