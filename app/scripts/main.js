@@ -1,18 +1,16 @@
-// Create the global game variables
-  var quizItemCount = quizItems.length,
-      currentQuestion = 1,
-      currentIndex = currentQuestion - 1,
-      correctAnswerCount = 0,
-      showPercentCorrect = Math.round((correctAnswerCount / quizItemCount) * 100);
+// Create the global game variables  
+  var quizItemCount;
+  var currentQuestion;
+  var currentIndex;
+  var correctAnswerCount;
+  var showPercentCorrect;
 
-  $('.question-index').html(currentQuestion);
-  $('.percent-correct').html(showPercentCorrect);
-  $('.correct-total').html(correctAnswerCount);
-  $('.question-total').html(quizItemCount);
-  
   // Utility functions
-  function clearQuestions(){
-    $('.quiz-options label, .quiz-options input').remove();
+  function resetQuestion(){
+    $('.quiz-options label').remove();
+    $('.quiz-question').removeClass("answer-incorrect answer-correct");
+    $('.quiz-options').removeClass("option-selected");
+    $('.next-question, .submit').addClass("disabled");
   }
 
   function addselectedClass(){
@@ -30,31 +28,61 @@
     audio[0].load();
   }
 
-  function displayQuestion(){
-    if(currentQuestion <= quizItemCount){
-      clearQuestions();
-      updateAudio(quizItems[currentIndex].mp3Name);
-      $.each(quizItems[currentIndex].answerOptions, function(key, value){
-        $('<label for=' + (key + 1) + '>' + value + '</label><input type="radio" name="quiz-item" id="' + (key+1) + ' /">').appendTo('.quiz-options');
-      });
-      // A bunch of DOM Crud
-      $('.quiz-options label').on("click", userSelection);
-      $('.quiz-options label').on("click", addselectedClass);
-      $('.submit').on("click", submitResponse);
-      $('.submit').on("click", function(){
-        $(this).addClass("disabled");
-        $('.quiz-options').addClass('option-selected');
-        $('.next-question').removeClass("disabled");
-      })
-    } else {
-      $('.quiz-instructions, .quiz-content').hide();
-      $('.quiz-complete').removeClass("hidden");
-    }
+  $('.quiz-content').hide();
+  $('.quiz-start').on("click", quizStart);
+  
+  function quizStart(){
+    quizItemCount = quizItems.length;
+    currentQuestion = 10;
+    currentIndex = currentQuestion - 1;
+    correctAnswerCount = 0;
+    showPercentCorrect = Math.round((correctAnswerCount / quizItemCount) * 100);   
+    showSingleQuestion();
+    captureSelction();
+    showStatus();
+    $('.quiz-content').fadeIn(1000);
+    $('.quiz-instructions').fadeOut(300);
+    $('.submit').on("click", submitResponse);
+    $('.submit').on("click", function(){
+      $(this).addClass("disabled");
+      $('.quiz-options').addClass('option-selected');
+      $('.next-question').removeClass("disabled");
+    }); 
   }
+
+  $('.next-question').on("click", showNextQuestion);
+
+  function showNextQuestion(){
+    resetQuestion();
+    currentIndex++;
+    currentQuestion++;
+    showSingleQuestion();
+    captureSelction();
+    showStatus();
+  }
+
+  var showSingleQuestion = (function(){
+    resetQuestion();
+    return function(){
+      var currentItem = quizItems[currentIndex];
+      var answerOptions = currentItem.answerOptions;
+      updateAudio(quizItems[currentIndex].mp3Name);
+      for(var i = 0; i < answerOptions.length; i++){
+        $('<label for=' + (i + 1) + '>' + answerOptions[i] + '</label>').appendTo('.quiz-options');
+      }
+    }
+  })();
+
 
   function userSelection(){
     selectionID = parseInt($(this).attr("for")-1);
+    console.log("user selection: " + selectionID);
     return selectionID;
+  }
+
+  function captureSelction(){
+    $('.quiz-options label').on("click", userSelection);
+    $('.quiz-options label').on("click", addselectedClass);
   }
 
   function submitResponse(){
@@ -62,20 +90,20 @@
     var userResponse = selectionID;
     var $question = $('.quiz-question');
     if (correctResult === userResponse){
-      $question.removeClass("answer-incorrect");
       $question.addClass("answer-correct");
-      // needs to return Correct Answer Count
-      console.log("Correct Answer Count: " + correctAnswerCount);
     } else {
-      $question.removeClass("answer-correct");
       $question.addClass("answer-incorrect");
     }
   }
 
   function resetGame(){
-    // reset all game variables
+    window.location.reload(); 
   }
 
-displayQuestion();
-
-
+  function showStatus(){
+    $('.question-index').html(currentQuestion);
+    $('.percent-correct').html(showPercentCorrect);
+    $('.correct-total').html(correctAnswerCount);
+    $('.question-total').html(quizItemCount);
+  }
+  
