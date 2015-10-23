@@ -29,15 +29,15 @@
   }
   
   function quizStart(){
-    // quizItemCount = quizItems.length;
+    quizItemCount = quizItems.length;
     currentQuestion = 1;
     currentIndex = currentQuestion - 1;
     correctAnswerCount = 0;
-    // showPercentCorrect = Math.round((correctAnswerCount / quizItemCount) * 100);   
+    showPercentCorrect = Math.round((correctAnswerCount / quizItemCount) * 100);   
     showSingleQuestion();
     captureSelction();
     showStatus();
-    $('.quiz-content').removeClass("hidden");
+    $('.quiz-content, .result').removeClass("hidden");
     $('.quiz-instructions').addClass("hidden");
     $('.submit').on("click", submitResponse);
     $('.submit').on("click", function(){
@@ -50,13 +50,13 @@
   function showNextQuestion(){
     var getCurrentQuestion = currentQuestion;
     quizItemCount = quizItems.length;
+    currentIndex++;
+    currentQuestion++;
+    showStatus();
     if (getCurrentQuestion < quizItemCount) {
       resetQuestion();
-      currentIndex++;
-      currentQuestion++;
       showSingleQuestion();
       captureSelction();
-      showStatus();
     } else {
       $('.quiz-content').addClass("hidden");
       $('.quiz-complete').removeClass("hidden");
@@ -99,11 +99,8 @@
     }
   }
 
-  
-
   function showStatus(){
     $('.question-index').html(currentQuestion);
-    $('.percent-correct').html(showPercentCorrect);
     $('.correct-total').html(correctAnswerCount);
     $('.question-total').html(quizItemCount);
   }
