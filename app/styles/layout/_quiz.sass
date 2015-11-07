@@ -1,3 +1,7 @@
+.quiz-instructions, .quiz-complete
+  background-color: $white
+  padding: 2rem
+
 .quiz-intro
   background-color: $white
   margin-bottom: 2rem
@@ -30,6 +34,8 @@
     padding: 0 0 1rem
   audio
     width: 100%
+    .touch &
+      min-height: 80px
 .quiz-options
   background-color: $white
   display: flex
@@ -58,6 +64,9 @@
       color: $white
       &:hover 
         cursor: default
+  &.option-selected
+    label
+      pointer-events: none
 .quiz-action
   text-align: center
   background-color: darken($offwhite, 5%)
@@ -68,7 +77,8 @@
   border-radius: 100%
   position: absolute
   top: 0
-  left: 0
+  left: 50%
+  margin-left: 1.5px
   text-align: center
   background-color: $white
   z-index: -10
@@ -80,7 +90,7 @@
     width: 2rem
     margin-top: .5rem
   .answer-correct &, .answer-incorrect &
-    left: -1rem
+    //left: -1rem
     top: -1rem
     z-index: 10
   .answer-correct &

@@ -31,7 +31,7 @@
     },
     {
       mp3Name: "audio/s.mp3",
-      answerOptions: ["Superstision", "Get Down Tonight", "Disco Inferno", "Cissy Strut"],
+      answerOptions: ["Superstition", "Get Down Tonight", "Disco Inferno", "Cissy Strut"],
       correctAnswer: 0
     },
     {

@@ -1,108 +1,115 @@
-!function(){
-  var questions = [
-    {
-      mp3Name: "audio/bh.mp3",
-      answerOptions: ["Brick House", "Give Up The Funk", "Pick Up The Pieces", "Funky Drummer"],
-      correctAnswer: 0
-    },
-    {
-      mp3Name: "audio/fw.mp3",
-      answerOptions: ["Slip Sliding Away", "What I Am", "Fifty Ways to Leave Your Lover", "Chuck E's In Love"],
-      correctAnswer: 2
-    },
-    {
-      mp3Name: "audio/hft.mp3",
-      answerOptions: ["Rock and Roll", "Hot For Teacher", "I Can't Drive 55", "You Might Think"],
-      correctAnswer: 1
-    },
-    {
-      mp3Name: "audio/r.mp3",
-      answerOptions: ["Layla", "In Your Eyes", "Roseanna", "Maybe I'm Amazed"],
-      correctAnswer: 2
-    },
-    {
-      mp3Name: "audio/rr.mp3",
-      answerOptions: ["Tom Sawyer", "Moby Dick", "The End", "Rock and Roll"],
-      correctAnswer: 3
-    },
-    {
-      mp3Name: "audio/rwy.mp3",
-      answerOptions: ["I Feel Good", "Rock With You", "Billie Jean", "Uptown Funk"],
-      correctAnswer: 1
-    },
-    {
-      mp3Name: "audio/s.mp3",
-      answerOptions: ["Superstision", "Get Down Tonight", "Disco Inferno", "Cissy Strut"],
-      correctAnswer: 0
-    },
-    {
-      mp3Name: "audio/sbs.mp3",
-      answerOptions: ["War", "Sunday Bloody Sunday", "Fortunate Son", "Rainy Day Woman #12 & 35"],
-      correctAnswer: 1
-    },
-    {
-      mp3Name: "audio/sss.mp3",
-      answerOptions: ["In The Mood", "Caravan", "Night in Tunisia", "Sing Sing Sing"],
-      correctAnswer: 3
-    },
-    {
-      mp3Name: "audio/tp.mp3",
-      answerOptions: ["Semi Charmed Life", "Right Here Right Now", "Two Princes", "Inside Out"],
-      correctAnswer: 2
-    },
-    {
-      mp3Name: "audio/wo.mp3",
-      answerOptions: ["I Want Candy", "Hand Jive", "Wipeout", "Let There Be Drums"],
-      correctAnswer: 2
+// Create the global game variables  
+  var quizItemCount;
+  var currentQuestion;
+  var currentIndex;
+  var correctAnswerCount;
+  var showPercentCorrect;
+
+  // Utility functions
+  function resetQuestion(){
+    $('.quiz-options label').remove();
+    $('.quiz-question').removeClass("answer-incorrect answer-correct");
+    $('.quiz-options').removeClass("option-selected");
+    $('.next-question, .submit').addClass("disabled");
+  }
+
+  function addselectedClass(){
+    var $this = $(this);
+    $this.closest(".quiz-options").find('label').removeClass("selected");
+    $this.addClass("selected");
+    $('.quiz-action .submit').removeClass("disabled");
+  }
+
+  function updateAudio(sourceUrl){
+    // http://stackoverflow.com/questions/9421505/switch-audio-source-with-jquery-and-html5-audio-tag#answer-9512994
+    var audio = $('.audio-player');
+    $('.audio-source').attr("src", sourceUrl);
+    audio[0].pause();
+    audio[0].load();
+  }
+  
+  function quizStart(){
+    quizItemCount = quizItems.length;
+    currentQuestion = 1;
+    currentIndex = currentQuestion - 1;
+    correctAnswerCount = 0;
+    showPercentCorrect = Math.round((correctAnswerCount / quizItemCount) * 100);   
+    showSingleQuestion();
+    captureSelction();
+    showStatus();
+    $('.quiz-content, .result').removeClass("hidden");
+    $('.quiz-instructions').addClass("hidden");
+    $('.submit').on("click", submitResponse);
+    $('.submit').on("click", function(){
+      $(this).addClass("disabled");
+      $('.quiz-options').addClass('option-selected');
+      $('.next-question').removeClass("disabled");
+    }); 
+  }
+
+  function showNextQuestion(){
+    var getCurrentQuestion = currentQuestion;
+    quizItemCount = quizItems.length;
+    currentIndex++;
+    currentQuestion++;
+    showStatus();
+    if (getCurrentQuestion < quizItemCount) {
+      resetQuestion();
+      showSingleQuestion();
+      captureSelction();
+    } else {
+      $('.quiz-content').addClass("hidden");
+      $('.quiz-complete').removeClass("hidden");
     }
-  ];
+  }
 
-  // Question Object
-    function Question(model){
-      this.mp3Name = model.mp3Name;
-      this.answerOptions = model.answerOptions;
-      this.correctAnswer = model.correctAnswer;
-    }
-
-    Question.prototype.checkAnswer = function(index){
-      return index === this.correctAnswer;
-    };
-
-    Question.prototype.forEachAnswer = function(callback, context){
-      this.answerOptions.forEach(callback, context);
-    };
-
-  // Quiz Object
-    function Quiz(data){
-      this.numberCorrect = 0;
-      this.counter = 0;
-      this.questions = [];
-
-      this.addQuestions(data);
-    }
-
-    Quiz.prototype.addQuestions = function(data){
-      for (var i = 0; i < data.length; i++){
-        this.questions.push(new Question(data[i]));
+  var showSingleQuestion = (function(){
+    resetQuestion();
+    return function(){
+      var currentItem = quizItems[currentIndex];
+      var answerOptions = currentItem.answerOptions;
+      updateAudio(quizItems[currentIndex].mp3Name);
+      for(var i = 0; i < answerOptions.length; i++){
+        $('<label for=' + (i + 1) + '>' + answerOptions[i] + '</label>').appendTo('.quiz-options');
       }
-    };
-
-    Quiz.prototype.advanceQuestion = function(lastAnswer) {
-      if (this.currentQuestion && this.currentQuestion.checkAnswer(lastAnswer)) {
-        this.numberCorrect++;
-      }
-
-      this.currentQuestion = this.questions[this.counter++];
-
-      return this.currentQuestion;
     }
-
-}();
-
+  })();
 
 
+  function userSelection(){
+    selectionID = parseInt($(this).attr("for")-1);
+    console.log("user selection: " + selectionID);
+    return selectionID;
+  }
 
+  function captureSelction(){
+    $('.quiz-options label').on("click", userSelection);
+    $('.quiz-options label').on("click", addselectedClass);
+  }
 
+  function submitResponse(){
+    var correctResult = quizItems[currentIndex].correctAnswer;
+    var userResponse = selectionID;
+    var $question = $('.quiz-question');
+    if (correctResult === userResponse){
+      $question.addClass("answer-correct");
+      return correctAnswerCount++;
+    } else {
+      $question.addClass("answer-incorrect");
+    }
+  }
 
+  function showStatus(){
+    $('.question-index').html(currentQuestion);
+    $('.correct-total').html(correctAnswerCount);
+    $('.question-total').html(quizItemCount);
+  }
 
+  function resetGame(){
+    window.location.reload(); 
+  }
 
+  $('.next-question').on("click", showNextQuestion);
+  $('.quiz-start').on("click", quizStart);
+  $('.play-again').on("click", resetGame);
+  

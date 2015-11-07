@@ -54,40 +54,40 @@
             c-3.9,2.2-5.4,7.1-3.2,11.1L-288.6,290.8z"/>
         </g>
         </svg>
-        <div class="result">
-            <strong><span class="percent-correct">0</span><sup>%</sup> Correct.</strong>
+        <div class="result hidden">
+            <strong><span class="correct-total">0</span> of <span class="question-total">0</span> Correct.</strong>
         </div>
       </div>
     </div>
     <div class="wrapper--content quiz-instructions">
+      <h1>Famous Drum Intros</h1>
       <p>How well do you know these famous songs that begin with a drum groove fill. Test your knowledge by listening to each audio sample, and then selecting the appropriate song.</p>
+
+      <button class="quiz-start">Start Quiz</button>
     </div>
-    <div class="wrapper--content quiz-content">
+    <div class="wrapper--content quiz-content hidden">
       <!-- Add class 'unanswered', 'answer-correct', 'answer-incorrect' -->
       <div class="quiz-question">
         <div class="quiz-details">
           <div class="quiz-number">
-            Question <span class="question-index">1</span> of <span class="question-total">11</span>
+            Drum Intro <span class="question-index">1</span> of <span class="question-total">11</span>
           </div>
           <audio controls class="audio-player">
             <source src="audio/bh.mp3" type="audio/mpeg" class="audio-source">
             Your browser does not support the audio element.
           </audio>
         </div>
+        <!-- Add  -->
         <div class="quiz-options">
           <!-- class="selected" for selected item -->
           <label for="1">Placeholder</label>
-          <input type="radio" name="quiz-item" id="1">
           <label for="2">Placeholder</label>
-          <input type="radio" name="quiz-item" id="2">
           <label for="3">Placeholder</label>
-          <input type="radio" name="quiz-item" id="3">
           <label for="4">Placeholder</label>
-          <input type="radio" name="quiz-item" id="4">
         </div>
         <div class="quiz-action">
           <button type="submit" class="submit">Submit Answer</button>
-          <button class="next-question disabled">Next Question</button>
+          <button class="next-question">Next Question</button>
         </div>
         <div class="quiz-result">
           <div class="incorrect">
@@ -102,7 +102,7 @@
 
     <div class="wrapper--content quiz-complete hidden">
       <h1>Thanks for playing</h1>
-      <p>You guessed <strong class="correct-total">5</strong> out of <strong class="question-total">10</strong> correct. That's <strong class="percent-correct">90%</strong><sup>%</sup> correct. Nice Job.</p>
+      <p>You guessed <strong class="correct-total">5</strong> out of <strong class="question-total">10</strong> correct.</p>
       <button class="play-again">Play Again?</button>
     </div>
 
