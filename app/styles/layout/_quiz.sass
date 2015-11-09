@@ -40,12 +40,7 @@
   background-color: $white
   display: flex
   flex-wrap: wrap
-  input
-    position: absolute
-    top: -10000rem
-    left: -10000rem
-    display: none
-  > label
+  button
     flex: 1 0 50%
     line-height: 6rem
     background-color: $lightgray
@@ -53,56 +48,16 @@
     padding: 0 0 0 .5rem
     text-align: center
     border-bottom: $white 1px solid
+    color: $black
     &:nth-child(odd)
       border-right: $white 1px solid
     &:hover 
       background-color: $link-color
       color: $white
       cursor: pointer
-    &.selected
-      background-color: darken($lightgray, 20%)
-      color: $white
-      &:hover 
-        cursor: default
   &.option-selected
     label
       pointer-events: none
-.quiz-action
-  text-align: center
-  background-color: darken($offwhite, 5%)
-  padding: 1rem 0
-.quiz-result
-  height: 3rem
-  width: 3rem
-  border-radius: 100%
-  position: absolute
-  top: 0
-  left: 50%
-  margin-left: 1.5px
-  text-align: center
-  background-color: $white
-  z-index: -10
-  transition: all .2s ease-in-out
-  .incorrect, .correct
-    display: none
-  svg 
-    height: 2rem
-    width: 2rem
-    margin-top: .5rem
-  .answer-correct &, .answer-incorrect &
-    //left: -1rem
-    top: -1rem
-    z-index: 10
-  .answer-correct &
-    .incorrect
-      display: none
-    .correct
-      display: block
-  .answer-incorrect &
-    .correct
-      display: none
-    .incorrect
-      display: block
 .result--percent
   font-weight: bold
   font-size: 1.5rem

@@ -1,115 +1,108 @@
-// Create the global game variables  
-  var quizItemCount;
-  var currentQuestion;
-  var currentIndex;
-  var correctAnswerCount;
-  var showPercentCorrect;
+!function(){
+var audio = document.querySelectorAll('.audio-player');
+var audioSource = document.querySelector('.audioSource');
 
-  // Utility functions
-  function resetQuestion(){
-    $('.quiz-options label').remove();
-    $('.quiz-question').removeClass("answer-incorrect answer-correct");
-    $('.quiz-options').removeClass("option-selected");
-    $('.next-question, .submit').addClass("disabled");
-  }
+function updateAudio(sourceUrl){
+  audioSource.setAttribute('src', "audio/" + sourceUrl + ".mp3");
+  audio[0].pause();
+  audio[0].load();
+}
 
-  function addselectedClass(){
-    var $this = $(this);
-    $this.closest(".quiz-options").find('label').removeClass("selected");
-    $this.addClass("selected");
-    $('.quiz-action .submit').removeClass("disabled");
-  }
+function Question(questionText, correctAnswer, answerOption1, answerOption2, answerOption3, answerOption4) {
+  this.questionText = questionText,
+  this.correctAnswer = correctAnswer,
+  this.answerOptions = [answerOption1, answerOption2, answerOption3, answerOption4]
+}
 
-  function updateAudio(sourceUrl){
-    // http://stackoverflow.com/questions/9421505/switch-audio-source-with-jquery-and-html5-audio-tag#answer-9512994
-    var audio = $('.audio-player');
-    $('.audio-source').attr("src", sourceUrl);
-    audio[0].pause();
-    audio[0].load();
-  }
-  
-  function quizStart(){
-    quizItemCount = quizItems.length;
-    currentQuestion = 1;
-    currentIndex = currentQuestion - 1;
-    correctAnswerCount = 0;
-    showPercentCorrect = Math.round((correctAnswerCount / quizItemCount) * 100);   
-    showSingleQuestion();
-    captureSelction();
-    showStatus();
-    $('.quiz-content, .result').removeClass("hidden");
-    $('.quiz-instructions').addClass("hidden");
-    $('.submit').on("click", submitResponse);
-    $('.submit').on("click", function(){
-      $(this).addClass("disabled");
-      $('.quiz-options').addClass('option-selected');
-      $('.next-question').removeClass("disabled");
-    }); 
-  }
+var q1 = new Question('bh', "Brick House", "Brick House", "Bill Bruford", "Phil Collins", "Keith Moon");
+var q2 = new Question('fw', "Fifty Ways To Leave Your Lover", "Terry Bozzio", "Adrian Young", "fw", "Fifty Ways To Leave Your Lover");
+var q3 = new Question('hft', "Hot For Teacher", "rr", "Bill Bruford", "Hot For Teacher", "Keith Moon");
+var q4 = new Question('r', "Roseanna", "Terry Bozzio", "Roseanna", "fw", "Eric Kretz");
+var q5 = new Question('rr', "Rock and Roll", "Rock and Roll", "Bill Bruford", "Phil Collins", "Keith Moon");
+var q6 = new Question('rwy', "Rock With You", "Terry Bozzio", "Adrian Young", "Rock With You", "Eric Kretz");
+var q7 = new Question('s', "Superstition", "rr", "Superstition", "Phil Collins", "Keith Moon");
+var q8 = new Question('sbs', "Sunday Bloody Sunday", "Terry Bozzio", "Sunday Bloody Sunday", "fw", "Eric Kretz");
+var q9 = new Question('sss',  "Sing Sing Sing", "rr", "Bill Bruford", "Phil Collins", "Sing Sing Sing");
+var q10 = new Question('tp', "Two Princes", "Two Princes", "Adrian Young", "fw", "Eric Kretz");
+var q11 = new Question('wo', "Wipe Out", "rr", "Bill Bruford", "Wipe Out", "Keith Moon");
 
-  function showNextQuestion(){
-    var getCurrentQuestion = currentQuestion;
-    quizItemCount = quizItems.length;
-    currentIndex++;
-    currentQuestion++;
-    showStatus();
-    if (getCurrentQuestion < quizItemCount) {
-      resetQuestion();
-      showSingleQuestion();
-      captureSelction();
+var data = {
+  questionsArray:[q1, q2, q3,q4,q5,q6,q7,q8,q9,q10,q11],
+  currentNumber: 0,
+  numberCorrect: 0,
+  currentQuestion: q1,
+  setCurrentQuestion: function(){
+    this.currentQuestion = this.questionsArray[this.currentNumber]
+  }
+}
+
+var controller = {
+  iterateQuestion: function(button){
+    var userGuess = button.text();
+    if(userGuess == data.currentQuestion.correctAnswer){
+      data.numberCorrect++
+    }
+    data.currentNumber++
+    if(data.currentNumber == data.questionsArray.length){
+      view.quizDone();
     } else {
-      $('.quiz-content').addClass("hidden");
-      $('.quiz-complete').removeClass("hidden");
+      data.setCurrentQuestion();
+      view.render();
     }
   }
+}
 
-  var showSingleQuestion = (function(){
-    resetQuestion();
-    return function(){
-      var currentItem = quizItems[currentIndex];
-      var answerOptions = currentItem.answerOptions;
-      updateAudio(quizItems[currentIndex].mp3Name);
-      for(var i = 0; i < answerOptions.length; i++){
-        $('<label for=' + (i + 1) + '>' + answerOptions[i] + '</label>').appendTo('.quiz-options');
-      }
-    }
-  })();
-
-
-  function userSelection(){
-    selectionID = parseInt($(this).attr("for")-1);
-    console.log("user selection: " + selectionID);
-    return selectionID;
+var view = {
+  init: function(){
+    // declare an empty audioPlayer object, to be filled with render
+    this.audioPlayer;
+    this.button1 = $('.quiz-option-one');
+    this.button2 = $('.quiz-option-two');
+    this.button3 = $('.quiz-option-three');
+    this.button4 = $('.quiz-option-four');
+    this.questionNumber = $('.number');
+    this.questionTotal = $('.total');
+    this.quizCompleteStatement = $('.quiz-complete');
+    this.questionTotal.text(data.questionsArray.length);
+    this.correctAnswers = $('.correct-total');
+    // sniff sniff... Code smell?
+    $('.quiz-button').click(function(){
+      controller.iterateQuestion($(this));
+    });
+    view.render();
+  },
+  render: function(){
+    this.audioPlayer = updateAudio(data.currentQuestion.questionText);
+    this.button1.text(data.currentQuestion.answerOptions[0]);
+    this.button2.text(data.currentQuestion.answerOptions[1]);
+    this.button3.text(data.currentQuestion.answerOptions[2]);
+    this.button4.text(data.currentQuestion.answerOptions[3]);
+    this.questionNumber.text(data.currentNumber + 1);
+    this.correctAnswers.text(data.numberCorrect);
+  },
+  quizDone: function(){
+    $('button').hide();
+    $('audio').hide();
+    $('.quiz-content').hide();
+    $('.quiz-complete').removeClass("hidden");
+    this.questionNumber.parent().hide();
+    this.quizCompleteStatement.text('You correctly answered ' + data.numberCorrect + ' out of ' + data.questionsArray.length + ".");
   }
+}
+window.game = {
+  view: view,
+  data: data,
+  controler: controller
+}
 
-  function captureSelction(){
-    $('.quiz-options label').on("click", userSelection);
-    $('.quiz-options label').on("click", addselectedClass);
-  }
+function startGame() {
+  $('.quiz-instructions').hide();
+  $('.quiz-content').removeClass("hidden");
+  $('.result').removeClass("hidden");
+}
 
-  function submitResponse(){
-    var correctResult = quizItems[currentIndex].correctAnswer;
-    var userResponse = selectionID;
-    var $question = $('.quiz-question');
-    if (correctResult === userResponse){
-      $question.addClass("answer-correct");
-      return correctAnswerCount++;
-    } else {
-      $question.addClass("answer-incorrect");
-    }
-  }
-
-  function showStatus(){
-    $('.question-index').html(currentQuestion);
-    $('.correct-total').html(correctAnswerCount);
-    $('.question-total').html(quizItemCount);
-  }
-
-  function resetGame(){
-    window.location.reload(); 
-  }
-
-  $('.next-question').on("click", showNextQuestion);
-  $('.quiz-start').on("click", quizStart);
-  $('.play-again').on("click", resetGame);
-  
+$(document).ready(function(){
+  view.init();
+  $('.quiz-start').on("click", startGame );
+});
+}()
