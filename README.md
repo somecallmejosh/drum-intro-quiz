@@ -3,7 +3,7 @@ Famous Drum Fill Quiz
 
 See the [demo](http://somecallmejosh.github.io/quiz-app/).
 
-This is a javascript based quiz app. I build it in two separate branches, one functional based and one object oriented. I've learned that I enjoy functional programming more than object oriented, but I can see the benefit of the OOP approach.
+This is a javascript based quiz app.
 
 ##Required Features
 - [x] The app must lead the user through a set of questions. The user should only see one question at a time, with new answers presented only after they have answered the current one.
